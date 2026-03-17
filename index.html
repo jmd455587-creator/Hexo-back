@@ -3,34 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEXO MONSTER</title>
+    <meta property="og:title" content="HEXO MONSTER is back">
+    <meta property="og:description" content="Experience the power of HEXO MONSTER">
+    <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'%3E%3Crect fill='%23000' width='1200' height='630'/%3E%3Ctext x='50%25' y='50%25' font-size='80' fill='%2300ff41' text-anchor='middle' dominant-baseline='middle' font-family='Courier New'%3EHEXO MONSTER%3C/text%3E%3C/svg%3E">
+    <title>HEXO MONSTER is back</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            background-color: #000;
-            color: #0f0;
-            font-family: 'Courier New', Courier, monospace;
+            background: linear-gradient(135deg, #0a0e27 0%, #16213e 100%);
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .matrix-char {
+            position: absolute;
+            color: rgba(0, 255, 65, 0.1);
+            font-size: 1.5rem;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .container {
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
-        h1 {
-            font-size: 4em;
-            text-transform: uppercase;
+        
+        .title {
+            font-size: 5rem;
+            font-weight: bold;
+            text-shadow: 0 0 20px #00ff41, 0 0 40px #00ff41;
+            animation: glitch 0.3s infinite;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
         }
-        p {
-            font-size: 1.5em;
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
         }
-        .code {
-            background-color: #222;
-            padding: 10px;
-            border-radius: 5px;
-            display: inline-block;
+        
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px #00ff41;
+            letter-spacing: 2px;
+        }
+        
+        .warning {
+            font-size: 0.9rem;
+            margin-bottom: 60px;
+            opacity: 0.8;
+            letter-spacing: 1px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.5; }
+        }
+        
+        .loading-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .loader {
+            border: 4px solid rgba(0, 255, 65, 0.2);
+            border-top: 4px solid #00ff41;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px #00ff41;
+        }
+        
+        .final-message {
+            display: none;
+            font-size: 2rem;
+            text-shadow: 0 0 20px #00ff41, 0 0 40px #00ff41;
+            animation: fadeInUp 1s ease-in;
+            letter-spacing: 2px;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to HEXO MONSTER!</h1>
-    <p>Experience the power of hacking with style!</p>
-    <p class="code">&gt; Initialize HEXO...</p>
-    <p class="code">&gt; Deploying...</p>
-    <p class="code">&gt; Success!</p>
+    <div class="matrix-bg" id="matrixBg"></div>
+    
+    <div class="container">
+        <div id="initialContent">
+            <div class="title">HEXO MONSTER</div>
+            <div class="subtitle">is back</div>
+            <div class="warning">Please don't leave here</div>
+        </div>
+        
+        <div class="loading-container" id="loadingContainer">
+            <div class="loader"></div>
+            <div class="loading-text">Processing...</div>
+        </div>
+        
+        <div class="final-message" id="finalMessage">
+            Thank you for giving me your valuable time
+        </div>
+    </div>
+
+    <script>
+        // Matrix background animation
+        function createMatrixBg() {
+            const bg = document.getElementById('matrixBg');
+            const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+            
+            for (let i = 0; i < 50; i++) {
+                const char = document.createElement('div');
+                char.className = 'matrix-char';
+                char.textContent = chars[Math.floor(Math.random() * chars.length)];
+                char.style.left = Math.random() * 100 + '%';
+                char.style.top = Math.random() * 100 + '%';
+                bg.appendChild(char);
+            }
+        }
+        
+        createMatrixBg();
+        
+        // Timeline
+        setTimeout(() => {
+            document.getElementById('initialContent').style.display = 'none';
+            document.getElementById('loadingContainer').style.display = 'flex';
+        }, 2500); // 2.5 seconds
+        
+        const loadingDuration = Math.floor(Math.random() * (55000 - 49000 + 1)) + 49000; // 49-55 seconds
+        
+        setTimeout(() => {
+            document.getElementById('loadingContainer').style.display = 'none';
+            document.getElementById('finalMessage').style.display = 'block';
+        }, 2500 + loadingDuration);
+    </script>
 </body>
 </html>
